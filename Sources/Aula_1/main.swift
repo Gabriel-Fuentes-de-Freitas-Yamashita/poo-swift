@@ -52,3 +52,61 @@ func tresProporcoes(lista: [Int]){
 
 
 tresProporcoes(lista: lista)
+
+print("---------------------------------------------------")
+print("Atividade 2")
+/*
+1- Crie uma função chamada obterDetalhesVoo que não recebe parâmetros e retorna uma tupla.
+
+2- A tupla de retorno deve conter três valores nomeados: codigo (String), destino (String) e pontual (Bool).
+
+3- Dentro da função, crie e retorne uma tupla com os seguintes dados: código "G3-1405", destino "Rio de Janeiro" e pontual true.
+
+4- Chame a função e armazene o resultado em uma constante chamada detalhesDoVoo.
+
+5- Acesse e imprima os valores da tupla usando os nomes dos elementos para formar uma frase, como: "O voo [código] para [destino] está com o status pontual: [pontual].".
+
+*/
+func obterDetalhesVoo() -> (codigo: String, destino: String, pontual: Bool) {
+    return (codigo: "G3-1405", destino: "Rio de Janeiro", pontual: true)
+}
+
+let detalhesDoVoo = obterDetalhesVoo()
+
+print("""
+O voo \(detalhesDoVoo.codigo) para \(detalhesDoVoo.destino) está com o status pontual: \(detalhesDoVoo.pontual)
+""" )
+
+print("---------------------------------------------------")
+print("Atividade 3")
+
+/*
+Crie uma função chamada calcularVendasDoDia que não recebe parâmetros.
+Essa função deve retornar uma tupla nomeada contendo as seguintes informações:
+produtosVendidos (um Int)
+valorTotal (um Double)
+clienteDestaque (uma String)
+Dentro da função, crie e retorne uma tupla com os seguintes dados fixos: 235 produtos vendidos, valor total de 4750.80 e o cliente destaque "Supermercado ABC".
+Fora da função, chame calcularVendasDoDia() e armazene o resultado em uma constante chamada relatorioDeHoje.
+Acesse os valores da tupla relatorioDeHoje usando os nomes dos elementos para imprimir no console um relatório formatado exatamente como abaixo:
+--- Relatório de Vendas [30/08/2025] ---
+Produtos Vendidos: 235 unidades
+Valor Total: R$ 4750.80
+Cliente Destaque do Dia: Supermercado ABC
+------------------------------------
+
+*/
+
+func calcularVendasDoDia() -> (produtosVendidos: Int, valorTotal: Double, clienteDestaque: String){
+    return (produtosVendidos: 235, valorTotal: 4750.80, clienteDestaque: "Supermercado ABC")
+}
+
+let relatorioDeHoje = calcularVendasDoDia()
+
+print("""
+--- Relatório de Vendas [30/08/2025] ---
+Produtos Vendidos: \(relatorioDeHoje.produtosVendidos)
+Valor Total: R$ \(relatorioDeHoje.valorTotal)
+Cliente Destaque do Dia: \(relatorioDeHoje.clienteDestaque)
+------------------------------------
+""")
