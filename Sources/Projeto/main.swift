@@ -1,3 +1,4 @@
+
 import Foundation
 
 
@@ -47,10 +48,10 @@ class Aluno: Pessoa{
     }
 }
 
-class Instrututor: Pessoa{
+class Instrutor: Pessoa{
      var especialidade: String
 
-     init(nome: nome, email: email, especialidade: String) {
+     init(nome: String, email: String, especialidade: String) {
         self.especialidade = especialidade
         super.init(nome: nome, email: email)
      }
@@ -91,9 +92,9 @@ class PlanoAnual: Plano{
         super.init(nome: "Plano Anual (Promocional)")
     }
     override func calcularMensalidade() -> Double {
-        var valorTotal: Double = 120.0 * 12
-        var desconto: Double = valorTotal * 0.20
-        var aPagar: Double = (valorTotal - desconto) / 12
+        let valorTotal: Double = 120.0 * 12
+        let desconto: Double = valorTotal * 0.20
+        let aPagar: Double = (valorTotal - desconto) / 12
         return aPagar
     }
 }
@@ -103,7 +104,7 @@ class PlanoAnual: Plano{
 let planoM = PlanoMensal()
 let planoA = PlanoAnual()
 
-let aluno1 = Aluno(nome: "Carlos", email: "carlos@email.com", matricula: "202301", plano: planoA)
+let aluno1 = Aluno(nome: "Carlos", email: "carlos@email.com", matricula: "202301", plano: planoM)
 let instrutor1 = Instrutor(nome: "Ana", email: "ana@gym.com", especialidade: "Musculação")
 
 print("--- Aluno ---")
