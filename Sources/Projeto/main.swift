@@ -102,7 +102,7 @@ class PlanoAnual: Plano{
 }
 
 // ---------- Testes ----------
-
+/*
 let planoM = PlanoMensal()
 let planoA = PlanoAnual()
 
@@ -115,3 +115,113 @@ print("Mensalidade a pagar: R$ \(aluno1.plano.calcularMensalidade())")
 
 print("\n--- Instrutor ---")
 print(instrutor1.getDescricao())
+*/
+
+protocol Manutencao{
+    var nomeItem: String {get }
+    var dataUltimaManutencao: String {get }
+    func realizarManutencao() -> Bool
+}
+
+class Aparelho: Manutencao{
+    var nomeItem: String
+    private (set) var dataUltimaManutencao: String
+
+    init (nomeItem: String, dataUltimaManutencao: String){
+        self.nomeItem = nomeItem
+        self.dataUltimaManutencao = "Nenhuma"
+    }
+
+    func realizarManutencao() -> Bool {
+        print("Manutencao realizada")
+        dataUltimaManutencao = "30/08/2025"
+        return true
+    }
+}
+
+class Aula{
+    var nome:String
+    var instrutor: Instrutor
+
+    init(nome:String,instrutor: Instrutor){
+        self.nome = nome
+        self.instrutor = instrutor
+    }
+
+    func getDescricao() -> String{
+        return ("""
+        Nome da Aula: \(nome)
+        Nome da instrutor: \(instrutor)
+        """)
+    }
+}
+
+class AulaPersonal: Aula{
+
+    var aluno: Aluno 
+
+    init(nome:String, instrutor: Instrutor, aluno: Aluno){
+        self.aluno = aluno
+        super.init(nome: nome, instrutor: instrutor)
+    }
+
+    override func getDescricao() -> String{
+        return super.getDescricao() + ("""
+        Aluno da aula particular: \(aluno)
+        """)
+    }
+
+}
+
+class AulaColetiva:Aula{
+    private (set) var alunosInscritos: [String: Aluno]
+    let capacidadeMaxima: Int = 25
+
+    override init(nome:String, instrutor: Instrutor){
+        self.alunosInscritos = [:]
+        super.init(nome: nome, instrutor: instrutor)
+    }
+    
+    func inscrever(aluno: Aluno) -> Bool{
+        if (alunosInscritos.count == capacidadeMaxima){
+            print("Erro: capacidade Maxima Atingida")
+            return false
+        } else if ( alunosInscritos[aluno.matricula] != nil){
+            print("Erro: esse aluno: \(aluno.nome)ja esta adicionado")
+            return false
+        } else {
+            alunosInscritos[aluno.matricula] = aluno
+            print("Sucesso: Aluno \(aluno.nome) inscrito na aula \(self.nome).")
+            return true
+        }
+    }
+}
+
+//  ---------- Testes ----------
+
+let planoPadrao = PlanoMensal()
+let instrutorJiraya = Instrutor(nome: "Jiraya", email: "jiraya@konoha.com", especialidade: "Ninjutsu")
+
+let aulaLotada = AulaColetiva(nome: "Aulão de Verão", instrutor: instrutorJiraya)
+
+print("\n--- Teste 1: Lotação da Sala ---")
+for i in 1...25 {
+    // Cria um aluno temporário: Aluno 1, Aluno 2, ...
+    let alunoTemp = Aluno(nome: "Aluno \(i)", 
+                          email: "aluno\(i)@gym.com", 
+                          matricula: "M\(i)",
+                          plano: planoPadrao)
+    
+    _ = aulaLotada.inscrever(aluno: alunoTemp)
+}
+
+print("\n--- Teste 2: O Aluno 26 (Aquele que chega atrasado) ---")
+// tentar colocar mais um
+let alunoAtrasado = Aluno(nome: "João Atrasado", 
+                          email: "joao@email.com", 
+                          matricula: "M26", 
+                          plano: planoPadrao)
+
+let conseguiu = aulaLotada.inscrever(aluno: alunoAtrasado)
+
+
