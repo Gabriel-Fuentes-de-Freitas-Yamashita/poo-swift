@@ -178,27 +178,35 @@ class AulaPersonal: Aula{
 }
 
 class AulaColetiva:Aula{
-    private (set) var alunosInscritos: [String: Aluno]
-    let capacidadeMaxima: Int = 25
+    private (set) var alunosInscritos: [String: Aluno] = [:]
+    var capacidadeMaxima: Int 
 
-    override init(nome:String, instrutor: Instrutor){
-        self.alunosInscritos = [:]
+     init(capacidadeMaxima: Int, nome:String, instrutor: Instrutor){
+        self.capacidadeMaxima = 25
         super.init(nome: nome, instrutor: instrutor)
     }
     
-    func inscrever(aluno: Aluno) -> Bool{
+    func inscrever(aluno: Aluno){
         if (alunosInscritos.count == capacidadeMaxima){
-            print("Erro: capacidade Maxima Atingida")
-            return false
+            print("> Erro: capacidade Maxima Atingida")
+            
         } else if ( alunosInscritos[aluno.matricula] != nil){
-            print("Erro: esse aluno: \(aluno.nome)ja esta adicionado")
-            return false
+            print("> Erro: esse aluno: \(aluno.nome) ja esta adicionado")
+            
         } else {
             alunosInscritos[aluno.matricula] = aluno
-            print("Sucesso: Aluno \(aluno.nome) inscrito na aula \(self.nome).")
-            return true
+            print("> Sucesso: Aluno \(aluno.nome) inscrito na aula \(self.nome).")
+            
         }
     }
+
+    override func getDescricao() -> String{
+        let vagasOcupadas = alunosInscritos.count
+        let vagasDisponiveis = capacidadeMaxima - vagasOcupadas 
+        return super.getDescricao() + "\n Aula Coletiva vagas ocupadas: \(vagasOcupadas)" +
+        "\n Aula Coletiva vagas disponiveis: \(vagasDisponiveis)" 
+    }
+    
 }
 
 //  ---------- Testes ----------
@@ -249,12 +257,12 @@ class Academia{
 
     func adicionarAparelho(_ aparelho: Aparelho){
         aparelhos.append(aparelho)
-        print("sucesso ao adicionar a aula: \(aparelho.nomeItem)")
+        print("> Sucesso ao adicionar a aula: \(aparelho.nomeItem)")
     }
 
     func adicionarAula(_ aula: Aula){
         aulasDisponiveis.append(aula)
-        print("sucesso ao adicionar a aula: \(aula.nome)")
+        print("> Sucesso ao adicionar a aula: \(aula.nome)")
     }
 
     func contratarInstrutor(_ instrutor: Instrutor){
@@ -263,10 +271,10 @@ class Academia{
 
     func matricularAluno(_ aluno: Aluno){
         if (alunosMatriculados[aluno.matricula] != nil){
-            print("Erro: Aluno com matrícula: \(aluno.matricula) - já existe.")
+            print("> Erro: Aluno com matrícula: \(aluno.matricula) - já existe.")
         } else {
             alunosMatriculados[aluno.matricula] = aluno
-            print("Sucesso ao matricular aluno")
+            print("> Sucesso ao matricular aluno \(aluno.nome) ")
         }
     }
 
@@ -293,7 +301,7 @@ class Academia{
                 print(aluno.getDescricao())
                 print("===============================")
             }
-            print("------------------------------------")
+           
         }
         
     }
@@ -308,87 +316,102 @@ class Academia{
                 print(aula.getDescricao())
                 print("===============================")
             }
-            print("------------------------------------")
+            
         }
     }
 
 }
 
-
-let minhaAcademia = Academia(nome: "Ironberg Tech")
+//1. Inicialização do Sistema
+let minhaAcademia = Academia(nome: "Academia POO 360")
 print("\n> Academia '\(minhaAcademia.nome)' inaugurada com sucesso!")
 
 
+//2. Criação dos Planos
 let planoMensal = PlanoMensal()
 let planoAnual = PlanoAnual()
 
 
+//3. Contratação de Instrutores
 let instrutorPaulo = Instrutor(nome: "Paulo Muzy", email: "paulo@birl.com", especialidade: "Musculação")
 minhaAcademia.contratarInstrutor(instrutorPaulo)
 print("> Instrutor \(instrutorPaulo.nome) contratado.")
-
-// TESTE 1: Matrícula Manual (Primeiro Método)
-print("\n--- Teste 1: Matrícula Manual (Objeto Existente) ---")
-let alunoJoao = Aluno(nome: "João da Silva", 
-                      email: "joao@gmail.com", 
-                      matricula: "2024-001", 
-                      plano: planoMensal)
-minhaAcademia.matricularAluno(alunoJoao)
+let instrutorDaronco = Instrutor(nome: "Daronco", email: "daronco@birl.com", especialidade: "Musculação")
+minhaAcademia.contratarInstrutor(instrutorDaronco)
+print("> Instrutor \(instrutorDaronco.nome) contratado.")
 
 
-// Tentando matricular o mesmo aluno de novo (deve dar erro)
-print("Tentando duplicar matrícula...")
-minhaAcademia.matricularAluno(alunoJoao)
+//4. Matrícula de Alunos
+let alunoMaria = minhaAcademia.matricularAluno(nome: "Maria Souza", email: "maria@hotmail.com", matricula: "2024-001", plano: planoAnual)
 
+let alunoAna  = minhaAcademia.matricularAluno(nome: "Ana Clara", email: "ana@yahoo.com", matricula: "2024-002", plano: planoMensal)
 
-// TESTE 2: Matrícula Direta (Segundo Método - Sobrecarga)
-print("\n--- Teste 2: Matrícula Direta (Conveniência) ---")
-
-let alunoMaria = minhaAcademia.matricularAluno(nome: "Maria Souza", 
-                                               email: "maria@hotmail.com", 
-                                               matricula: "2024-002", 
-                                               plano: planoAnual)
-
-
-let alunoAna = minhaAcademia.matricularAluno(nome: "Ana Clara", 
-                                             email: "ana@yahoo.com", 
-                                             matricula: "2024-003", 
-                                             plano: planoMensal)
-
-
-// TESTE 3: Listagem (Verificando a Ordem Alfabética)
-print("\n--- Teste 3: Listagem Geral ---")
-
-minhaAcademia.listarAlunos()
-
-
-// TESTE 4: Busca de Aluno
-print("\n--- Teste 4: Busca por Matrícula ---")
-
-let matriculaBusca = "2024-002"
-if let alunoEncontrado = minhaAcademia.buscarAluno(porMatricula: matriculaBusca) {
-    print("✅ Aluno encontrado: \(alunoEncontrado.nome) - Email: \(alunoEncontrado.email)")
-} else {
-    print("❌ Aluno não encontrado.")
-}
-
-let matriculaInexistente = "99999"
-if let alunoFantasma = minhaAcademia.buscarAluno(porMatricula: matriculaInexistente) {
-    print("Aluno encontrado: \(alunoFantasma.nome)")
-} else {
-    print("✅ Teste de aluno inexistente funcionou (retornou nil).")
-}
-
-
-// TESTE 5: Gestão de Aulas
-
-print("\n--- Teste 5: Adicionando e Listando Aulas ---")
-let aulaSpinning = Aula(nome: "Spinning Intenso", instrutor: instrutorPaulo)
-let aulaZumba = AulaColetiva(nome: "Zumba", instrutor: instrutorPaulo)
+//5. Criação e Agendamento de Aulas
+let aulaSpinning = AulaPersonal(nome: "Spinning Intenso", instrutor: instrutorPaulo, aluno: alunoAna)
+let aulaZumba = AulaColetiva(capacidadeMaxima: 3, nome: "Zumba", instrutor: instrutorPaulo)
 
 minhaAcademia.adicionarAula(aulaSpinning)
 minhaAcademia.adicionarAula(aulaZumba)
 
-minhaAcademia.listarAulas()
+//6. Interação com a Aula Coletiva e Lógica de Negócio
+aulaZumba.inscrever(aluno: alunoAna)
+aulaZumba.inscrever(aluno: alunoMaria)
 
+let alunoJoao = minhaAcademia.matricularAluno(nome: "Joao", email: "Joao@gmail.com", matricula: "2024-003", plano: planoAnual)
+aulaZumba.inscrever(aluno: alunoJoao)
+
+let alunoPedro = minhaAcademia.matricularAluno(nome: "Pedro", email: "pedro@mackenzista.com", matricula: "2024-004", plano: planoMensal)
+aulaZumba.inscrever(aluno: alunoJoao)
+
+minhaAcademia.listarAulas()
+minhaAcademia.listarAlunos()
+
+//7. Demonstração Prática de Polimorfismo com Aulas
+
+ var arrayEspecifico: [Aula] = []
+
+arrayEspecifico.append(aulaSpinning)
+arrayEspecifico.append(aulaZumba)
+
+for aula in arrayEspecifico{
+    print("\n#####################################")
+    print("\n====================================")
+    print(aula.getDescricao())
+    print("====================================")
+}
+
+//8. Demonstração Prática de Polimorfismo com Pessoas
+
+ var arrayEspecifico2: [Pessoa] = []
+
+arrayEspecifico2.append(alunoJoao)
+arrayEspecifico2.append(instrutorPaulo)
+
+for pessoa in arrayEspecifico2{
+    print("\n#####################################")
+    print("\n====================================")
+    print(pessoa.getDescricao())
+    print("====================================")
+}
+
+//9.Criação de um Relatório com Tuplas (Extension)
+
+//Passo 9.1: Estenda a Funcionalidade da Academia
+
+
+extension Academia {
+    
+    func gerarRelatorio() -> (totalAlunos: Int, totalInstrutores: Int, totalAulas: Int){
+      return (totalAlunos: alunosMatriculados.count, totalInstrutores: instrutoresContratados.count, totalAulas: aulasDisponiveis.count)
+    }
+
+}
+
+//Passo 9.2: Exiba o Relatório
+
+var relatorio = minhaAcademia.gerarRelatorio()
+print("\n#####################################")
+print("Total de Alunos: \(relatorio.totalAlunos)")
+print("Total de Instrutores: \(relatorio.totalInstrutores)")
+print("Total de Aulas Disponíveis: \(relatorio.totalAulas)")
 
