@@ -189,14 +189,14 @@ class AulaColetiva:Aula{
     func inscrever(aluno: Aluno){
         if (alunosInscritos.count >= capacidadeMaxima){
             print("> Erro: capacidade Maxima Atingida")
-        
-        }
-        if ( alunosInscritos[aluno.matricula] != nil){
-            print("> Erro: O aluno \(aluno.nome) ja esta adicionado")
-            
-        } else {
+        }else{
             alunosInscritos[aluno.matricula] = aluno
             print("> Sucesso: Aluno \(aluno.nome) inscrito na aula \(self.nome).")
+            
+        }
+            
+        if ( alunosInscritos[aluno.matricula] != nil){
+            print("> Erro: O aluno \(aluno.nome) ja esta adicionado")
             
         }
     }
