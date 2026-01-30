@@ -155,7 +155,7 @@ class Aula{
     func getDescricao() -> String{
         return ("""
         Nome da Aula: \(nome)
-        Nome da instrutor: \(instrutor)
+        Nome da instrutor: \(instrutor.nome)
         """)
     }
 }
@@ -171,7 +171,7 @@ class AulaPersonal: Aula{
 
     override func getDescricao() -> String{
         return super.getDescricao() + ("""
-        Aluno da aula particular: \(aluno)
+        \nAluno da aula particular: \(aluno.nome)
         """)
     }
 
@@ -182,16 +182,17 @@ class AulaColetiva:Aula{
     var capacidadeMaxima: Int 
 
      init(capacidadeMaxima: Int, nome:String, instrutor: Instrutor){
-        self.capacidadeMaxima = 25
+        self.capacidadeMaxima = capacidadeMaxima
         super.init(nome: nome, instrutor: instrutor)
     }
     
     func inscrever(aluno: Aluno){
-        if (alunosInscritos.count == capacidadeMaxima){
+        if (alunosInscritos.count >= capacidadeMaxima){
             print("> Erro: capacidade Maxima Atingida")
-            
-        } else if ( alunosInscritos[aluno.matricula] != nil){
-            print("> Erro: esse aluno: \(aluno.nome) ja esta adicionado")
+        
+        }
+        if ( alunosInscritos[aluno.matricula] != nil){
+            print("> Erro: O aluno \(aluno.nome) ja esta adicionado")
             
         } else {
             alunosInscritos[aluno.matricula] = aluno
@@ -274,7 +275,7 @@ class Academia{
             print("> Erro: Aluno com matrícula: \(aluno.matricula) - já existe.")
         } else {
             alunosMatriculados[aluno.matricula] = aluno
-            print("> Sucesso ao matricular aluno \(aluno.nome) ")
+            print("> Sucesso ao matricular aluno \(aluno.nome) na academia ")
         }
     }
 
@@ -359,9 +360,10 @@ aulaZumba.inscrever(aluno: alunoMaria)
 
 let alunoJoao = minhaAcademia.matricularAluno(nome: "Joao", email: "Joao@gmail.com", matricula: "2024-003", plano: planoAnual)
 aulaZumba.inscrever(aluno: alunoJoao)
+aulaZumba.inscrever(aluno: alunoJoao)
 
 let alunoPedro = minhaAcademia.matricularAluno(nome: "Pedro", email: "pedro@mackenzista.com", matricula: "2024-004", plano: planoMensal)
-aulaZumba.inscrever(aluno: alunoJoao)
+aulaZumba.inscrever(aluno: alunoPedro)
 
 minhaAcademia.listarAulas()
 minhaAcademia.listarAlunos()
